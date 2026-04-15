@@ -1,246 +1,77 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ShiraShalom.io</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    :root {
-      --bg: #0d0d0d; --bg-card: #141414; --text: #f5f5f5; --text-muted: #8c8c8c;
-      --text-dim: #555; --primary: #ff1a8c; --primary-faint: rgba(255,26,140,0.08);
-      --border: rgba(255,255,255,0.07); --tag-bg: rgba(255,255,255,0.06); --tag-text: #e6e6e6;
-    }
-    html { scroll-behavior: smooth; }
-    body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; font-size: 16px; line-height: 1.6; overflow-x: hidden; }
-    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 20px 32px; background: rgba(13,13,13,0.85); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); }
-    .nav-logo { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; letter-spacing: 0.05em; color: var(--text); text-decoration: none; }
-    .nav-logo span { color: var(--primary); }
-    .nav-links { display: flex; gap: 32px; list-style: none; }
-    .nav-links a { color: var(--text-muted); text-decoration: none; font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; transition: color 0.2s; }
-    .nav-links a:hover { color: var(--text); }
-    .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 4px; }
-    .hamburger span { display: block; width: 22px; height: 2px; background: var(--text); border-radius: 2px; }
-    #hero { position: relative; min-height: 100vh; display: flex; align-items: center; justify-content: center; overflow: hidden; }
-    .hero-glow-1 { position: absolute; top: 25%; left: -8rem; width: 24rem; height: 24rem; background: var(--primary-faint); border-radius: 50%; filter: blur(80px); pointer-events: none; }
-    .hero-glow-2 { position: absolute; bottom: 25%; right: -8rem; width: 20rem; height: 20rem; background: rgba(255,26,140,0.05); border-radius: 50%; filter: blur(80px); pointer-events: none; }
-    .hero-inner { position: relative; z-index: 10; max-width: 900px; margin: 0 auto; padding: 0 24px; text-align: center; }
-    .hero-eyebrow { font-size: 12px; font-weight: 500; letter-spacing: 0.25em; text-transform: uppercase; color: var(--primary); margin-bottom: 28px; opacity: 0; animation: fadeUp 0.8s ease forwards 0.2s; }
-    .hero-name { font-family: 'Playfair Display', serif; font-size: clamp(72px,12vw,120px); font-weight: 400; line-height: 1.0; margin-bottom: 32px; opacity: 0; animation: fadeUp 0.9s ease forwards 0.4s; }
-    .hero-name .line1 { display: block; color: rgba(245,245,245,0.55); }
-    .hero-name .line2 { display: block; color: rgba(245,245,245,0.75); }
-    .hero-desc { font-size: 17px; color: var(--text-muted); max-width: 540px; margin: 0 auto 40px; line-height: 1.7; opacity: 0; animation: fadeUp 0.9s ease forwards 0.6s; }
-    .hero-ctas { display: flex; gap: 16px; justify-content: center; opacity: 0; animation: fadeUp 0.9s ease forwards 0.8s; }
-    .btn-outline { display: inline-flex; align-items: center; gap: 8px; padding: 11px 24px; border: 1px solid var(--border); border-radius: 6px; color: var(--text); font-size: 14px; font-weight: 500; text-decoration: none; transition: border-color 0.2s, background 0.2s; }
-    .btn-outline:hover { border-color: rgba(255,255,255,0.2); background: rgba(255,255,255,0.04); }
-    .btn-primary { display: inline-flex; align-items: center; padding: 11px 24px; background: var(--primary); border: 1px solid var(--primary); border-radius: 6px; color: #fff; font-size: 14px; font-weight: 500; text-decoration: none; transition: opacity 0.2s; }
-    .btn-primary:hover { opacity: 0.88; }
-    section { padding: 128px 24px; }
-    .section-card { background: var(--bg-card); }
-    .section-inner { max-width: 1000px; margin: 0 auto; }
-    .section-label { font-size: 11px; font-weight: 600; letter-spacing: 0.28em; text-transform: uppercase; color: var(--primary); margin-bottom: 16px; }
-    .section-title { font-family: 'Playfair Display', serif; font-size: clamp(32px,5vw,48px); font-weight: 400; color: var(--text); margin-bottom: 48px; line-height: 1.2; }
-    .about-lead { font-size: 18px; color: var(--text-muted); max-width: 660px; line-height: 1.75; margin-bottom: 64px; }
-    .about-cards { display: grid; grid-template-columns: repeat(auto-fit,minmax(260px,1fr)); gap: 20px; }
-    .about-card { background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 12px; padding: 28px; transition: border-color 0.2s; }
-    .about-card:hover { border-color: rgba(255,26,140,0.25); }
-    .about-card-icon { width: 36px; height: 36px; background: var(--primary-faint); border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-bottom: 16px; font-size: 18px; }
-    .about-card h3 { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 8px; }
-    .about-card p { font-size: 14px; color: var(--text-muted); line-height: 1.65; }
-    .exp-list { display: flex; flex-direction: column; }
-    .exp-item { display: grid; grid-template-columns: 1fr 2fr; gap: 40px; padding: 40px 0; border-bottom: 1px solid var(--border); }
-    .exp-item:last-child { border-bottom: none; }
-    .exp-company { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 500; color: var(--text); margin-bottom: 4px; }
-    .exp-role { font-size: 13px; color: var(--primary); font-weight: 500; margin-bottom: 8px; }
-    .exp-dates { font-size: 12px; color: var(--text-muted); margin-bottom: 4px; }
-    .exp-location { font-size: 12px; color: var(--text-dim); }
-    .exp-desc { font-size: 13px; color: var(--text-muted); line-height: 1.65; margin-bottom: 16px; font-style: italic; }
-    .exp-bullets { list-style: none; display: flex; flex-direction: column; gap: 8px; }
-    .exp-bullets li { font-size: 14px; color: var(--text-muted); padding-left: 16px; position: relative; line-height: 1.55; }
-    .exp-bullets li::before { content: ''; position: absolute; left: 0; top: 9px; width: 5px; height: 5px; background: var(--primary); border-radius: 50%; }
-    .projects-intro { font-size: 16px; color: var(--text-muted); max-width: 560px; margin-bottom: 16px; line-height: 1.7; }
-    .projects-sub { font-size: 14px; color: var(--text-dim); margin-bottom: 56px; font-style: italic; }
-    .projects-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(290px,1fr)); gap: 20px; }
-    .project-card { background: rgba(255,255,255,0.025); border: 1px solid var(--border); border-radius: 14px; padding: 32px 28px; display: flex; flex-direction: column; gap: 12px; transition: border-color 0.2s, transform 0.2s; }
-    .project-card:hover { border-color: rgba(255,26,140,0.3); transform: translateY(-2px); }
-    .project-card-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
-    .project-icon { width: 42px; height: 42px; background: var(--primary-faint); border: 1px solid rgba(255,26,140,0.15); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
-    .project-name { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 500; color: var(--text); margin-bottom: 2px; }
-    .project-type { font-size: 12px; color: var(--text-muted); }
-    .project-desc { font-size: 14px; color: var(--text-muted); line-height: 1.65; }
-    .project-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
-    .tag { font-size: 11px; font-weight: 500; letter-spacing: 0.05em; color: var(--tag-text); background: var(--tag-bg); border: 1px solid var(--border); border-radius: 4px; padding: 3px 10px; }
-    .edu-list { display: flex; flex-direction: column; }
-    .edu-item { display: grid; grid-template-columns: 1fr 2fr; gap: 40px; padding: 40px 0; border-bottom: 1px solid var(--border); }
-    .edu-item:last-child { border-bottom: none; }
-    .edu-school { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 500; color: var(--text); margin-bottom: 4px; }
-    .edu-degree { font-size: 13px; color: var(--primary); font-weight: 500; margin-bottom: 4px; }
-    .edu-dates { font-size: 12px; color: var(--text-muted); }
-    .edu-bullets { list-style: none; display: flex; flex-direction: column; gap: 8px; }
-    .edu-bullets li { font-size: 14px; color: var(--text-muted); padding-left: 16px; position: relative; line-height: 1.55; }
-    .edu-bullets li::before { content: ''; position: absolute; left: 0; top: 9px; width: 5px; height: 5px; background: var(--primary); border-radius: 50%; }
-    .contact-inner { max-width: 700px; margin: 0 auto; text-align: center; }
-    .contact-title { font-family: 'Playfair Display', serif; font-size: clamp(36px,6vw,60px); font-weight: 400; line-height: 1.15; color: var(--text); margin-bottom: 20px; }
-    .contact-sub { font-size: 16px; color: var(--text-muted); margin-bottom: 48px; line-height: 1.7; }
-    .contact-links { display: flex; flex-direction: column; gap: 16px; align-items: center; margin-bottom: 48px; }
-    .contact-link { display: flex; align-items: center; gap: 12px; font-size: 15px; color: var(--text); text-decoration: none; transition: color 0.2s; }
-    .contact-link:hover { color: var(--primary); }
-    .contact-socials { display: flex; gap: 16px; justify-content: center; margin-bottom: 20px; flex-wrap: wrap; }
-    .social-btn { display: inline-flex; align-items: center; gap: 8px; padding: 10px 22px; border: 1px solid var(--border); border-radius: 6px; color: var(--text); font-size: 14px; text-decoration: none; transition: border-color 0.2s, background 0.2s; }
-    .social-btn:hover { border-color: rgba(255,255,255,0.2); background: rgba(255,255,255,0.04); }
-    .contact-lang { font-size: 13px; color: var(--text-dim); margin-top: 32px; }
-    footer { border-top: 1px solid var(--border); padding: 28px 32px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
-    .footer-logo { font-family: 'Playfair Display', serif; font-size: 16px; font-weight: 700; color: var(--text); }
-    .footer-logo span { color: var(--primary); }
-    .footer-copy { font-size: 13px; color: var(--text-muted); }
-    @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
-    @media (max-width: 768px) {
-      nav { padding: 16px 20px; } .nav-links { display: none; } .hamburger { display: flex; }
-      section { padding: 80px 20px; } .exp-item, .edu-item { grid-template-columns: 1fr; gap: 16px; }
-      .hero-name { font-size: clamp(56px,14vw,80px); } footer { flex-direction: column; align-items: flex-start; }
-    }
-    .mobile-menu { display: none; position: fixed; inset: 0; background: rgba(13,13,13,0.97); z-index: 200; flex-direction: column; align-items: center; justify-content: center; gap: 32px; }
-    .mobile-menu.open { display: flex; }
-    .mobile-menu a { font-size: 22px; color: var(--text); text-decoration: none; letter-spacing: 0.1em; text-transform: uppercase; }
-    .mobile-menu-close { position: absolute; top: 24px; right: 28px; font-size: 28px; cursor: pointer; color: var(--text); background: none; border: none; }
-  </style>
-</head>
-<body>
-
-<nav>
-  <a href="#hero" class="nav-logo">S<span>.</span>S</a>
-  <ul class="nav-links">
-    <li><a href="#about">About</a></li>
-    <li><a href="#experience">Experience</a></li>
-    <li><a href="#projects">Projects</a></li>
-    <li><a href="#education">Education</a></li>
-    <li><a href="#contact">Contact</a></li>
-  </ul>
-  <div class="hamburger" onclick="document.querySelector('.mobile-menu').classList.add('open')">
-    <span></span><span></span><span></span>
-  </div>
-</nav>
-
-<div class="mobile-menu">
-  <button class="mobile-menu-close" onclick="document.querySelector('.mobile-menu').classList.remove('open')">&#x2715;</button>
-  <a href="#about" onclick="this.closest('.mobile-menu').classList.remove('open')">About</a>
-  <a href="#experience" onclick="this.closest('.mobile-menu').classList.remove('open')">Experience</a>
-  <a href="#projects" onclick="this.closest('.mobile-menu').classList.remove('open')">Projects</a>
-  <a href="#education" onclick="this.closest('.mobile-menu').classList.remove('open')">Education</a>
-  <a href="#contact" onclick="this.closest('.mobile-menu').classList.remove('open')">Contact</a>
-</div>
-
-<section id="hero">
-  <div class="hero-glow-1"></div><div class="hero-glow-2"></div>
-  <div class="hero-inner">
-    <p class="hero-eyebrow">Builder &middot; Operator &middot; Creator</p>
-    <h1 class="hero-name"><span class="line1">Shira</span><span class="line2">Shalom</span></h1>
-    <p class="hero-desc">I build things &mdash; from scaling startup programs at Intel to building apps with AI. INSEAD MBA, VC operator, and endlessly curious about what's next.</p>
-    <div class="hero-ctas">
-      <a href="https://www.linkedin.com/in/shirashalom" class="btn-outline" target="_blank">LinkedIn</a>
-      <a href="#contact" class="btn-primary">Get in Touch</a>
-    </div>
-  </div>
-</section>
-
-<section id="about">
-  <div class="section-inner">
-    <p class="section-label">About</p>
-    <h2 class="section-title">An operator who loves to build.</h2>
-    <p class="about-lead">I thrive at the intersection of technology, strategy, and execution. With experience across venture capital, global accelerators, and nonprofit leadership, I bring a unique perspective &mdash; always asking "how can we build this better?"</p>
-    <div class="about-cards">
-      <div class="about-card"><div class="about-card-icon">&#x1F528;</div><h3>Builder at Heart</h3><p>From launching startup programs to building 3 fully functioning apps &mdash; I love creating things from scratch and bringing ideas to life.</p></div>
-      <div class="about-card"><div class="about-card-icon">&#x26A1;</div><h3>Tech Obsessed</h3><p>Deeply fascinated by emerging technologies. I stay on the cutting edge &mdash; whether it's AI tools, new dev frameworks, or the latest in venture-backed innovation.</p></div>
-      <div class="about-card"><div class="about-card-icon">&#x1F680;</div><h3>Zero to Scale</h3><p>Partnered with founders, investors, and corporate stakeholders to build partnerships and drive execution from zero to scale across global markets.</p></div>
-    </div>
-  </div>
-</section>
-
-<section id="experience" class="section-card">
-  <div class="section-inner">
-    <p class="section-label">Experience</p>
-    <h2 class="section-title">Where I've made impact.</h2>
-    <div class="exp-list">
-      <div class="exp-item">
-        <div><div class="exp-company">F2 Venture Capital</div><div class="exp-role">Platform &amp; Operations</div><div class="exp-dates">2024 &ndash; 2025</div><div class="exp-location">Tel Aviv</div></div>
-        <div><p class="exp-desc">Israeli early-stage VC fund investing at seed and Series A.</p><ul class="exp-bullets"><li>Led execution of ecosystem initiatives across F2's portfolio, coordinating between founders, investors, and internal stakeholders</li><li>Built and maintained relationships with founders, investors, and partners</li><li>Organized investor and portfolio-facing events and forums</li></ul></div>
-      </div>
-      <div class="exp-item">
-        <div><div class="exp-company">Project Rails</div><div class="exp-role">Managing Director</div><div class="exp-dates">2021 &ndash; 2022</div><div class="exp-location">Tel Aviv</div></div>
-        <div><p class="exp-desc">Nonprofit integrating developers from under-represented communities into tech.</p><ul class="exp-bullets"><li>Led strategy and execution across operations, partnerships, and stakeholder engagement</li><li>Encouraged 50 companies such as Google, Intel, and IronSource to hire underprivileged developers</li></ul></div>
-      </div>
-      <div class="exp-item">
-        <div><div class="exp-company">Intel IGNITE</div><div class="exp-role">Global Operations Manager</div><div class="exp-dates">2019 &ndash; 2021</div><div class="exp-location">Tel Aviv</div></div>
-        <div><p class="exp-desc">Intel's growth program for early-stage startups with +$1B funding to date.</p><ul class="exp-bullets"><li>Built and scaled new global operations across Israel, Germany, and the US</li><li>Managed startup growth program for 50 companies &mdash; 400% annual funding growth</li><li>Developed partnerships with 100+ companies (Amazon, Google, Wix)</li><li>Led pilot of portfolio company product within Intel, contributing to a $650M acquisition</li><li>Awarded 4 Intel Recognition awards for outstanding achievements</li></ul></div>
-      </div>
-      <div class="exp-item">
-        <div><div class="exp-company">Dori Media Group</div><div class="exp-role">Production Office Coordinator</div><div class="exp-dates">2014 &ndash; 2016</div><div class="exp-location">Tel Aviv</div></div>
-        <div><p class="exp-desc">Global TV and distribution corporation with $37M annual revenue.</p><ul class="exp-bullets"><li>Oversaw pre-production of 8 TV Drama productions &mdash; hired 100+ employees</li><li>Directed distribution of 5 shows to 7 countries</li></ul></div>
-      </div>
-      <div class="exp-item">
-        <div><div class="exp-company">IDF Navy &mdash; Shayetet 13</div><div class="exp-role">Sergeant</div><div class="exp-dates">2012 &ndash; 2014</div><div class="exp-location">Haifa</div></div>
-        <div><p class="exp-desc">Israel's elite naval commando unit.</p><ul class="exp-bullets"><li>Led operational teams of 7, planning sessions for up to 100 soldiers</li><li>Awarded "Outstanding Soldier" by unit's commanding officer</li></ul></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section id="projects">
-  <div class="section-inner">
-    <p class="section-label">Side Projects</p>
-    <h2 class="section-title">I ship things for fun.</h2>
-    <p class="projects-intro">3 fully functioning apps built from scratch using Claude Code, GitHub, and Vercel. Not an engineer by training &mdash; just deeply curious and can't stop building.</p>
-    <p class="projects-sub">(Yes, including this website.)</p>
-    <div class="projects-grid">
-      <div class="project-card"><div class="project-card-header"><div><div class="project-name">Attune</div><div class="project-type">Relationship &amp; Connection App</div></div><div class="project-icon">&#x1F49C;</div></div><p class="project-desc">A fully functioning app built from the ground up &mdash; helping people nurture meaningful relationships through intentional, thoughtful prompts and reminders.</p><div class="project-tags"><span class="tag">Claude Code</span><span class="tag">Full Stack</span><span class="tag">Vercel</span></div></div>
-      <div class="project-card"><div class="project-card-header"><div><div class="project-name">AI Personal Assistant</div><div class="project-type">Email &amp; Task Intelligence</div></div><div class="project-icon">&#x1F916;</div></div><p class="project-desc">A personal AI assistant that manages emails and tasks &mdash; cutting through inbox noise, drafting responses, and keeping priorities front and center.</p><div class="project-tags"><span class="tag">AI</span><span class="tag">Productivity</span><span class="tag">GitHub</span></div></div>
-      <div class="project-card"><div class="project-card-header"><div><div class="project-name">Job Search CRM</div><div class="project-type">Automatic Job Tracker</div></div><div class="project-icon">&#x1F4CB;</div></div><p class="project-desc">A fully automated CRM for job searching &mdash; tracks applications, follow-ups, and pipeline stages so nothing falls through the cracks.</p><div class="project-tags"><span class="tag">Automation</span><span class="tag">CRM</span><span class="tag">Claude Code</span></div></div>
-    </div>
-  </div>
-</section>
-
-<section id="education" class="section-card">
-  <div class="section-inner">
-    <p class="section-label">Education</p>
-    <h2 class="section-title">Where I studied.</h2>
-    <div class="edu-list">
-      <div class="edu-item">
-        <div><div class="edu-school">INSEAD</div><div class="edu-degree">MBA &mdash; Class of July 2023</div><div class="edu-dates">2022 &ndash; 2023 &middot; Fontainebleau, France</div></div>
-        <div><ul class="edu-bullets"><li>Clubs: Entrepreneurship, TMT, Women in Business, Consulting, Family Business</li><li>Key Classes: Market Driving Strategies, Risk Management, Digital Marketing, Strategy Execution</li></ul></div>
-      </div>
-      <div class="edu-item">
-        <div><div class="edu-school">Reichman University</div><div class="edu-degree">B.A. Psychology, Concentration in Media</div><div class="edu-dates">2016 &ndash; 2019 &middot; Herzliya, Israel</div></div>
-        <div><ul class="edu-bullets"><li>Internship &mdash; Organizational Development at Israel's largest insurance company</li><li>Head of Content Team, Media in Conflicts Seminar</li></ul></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section id="contact">
-  <div class="contact-inner">
-    <p class="section-label" style="text-align:center">Get in Touch</p>
-    <h2 class="contact-title">Let's build something<br>together.</h2>
-    <p class="contact-sub">Always open to exploring new opportunities, interesting conversations, and ambitious projects.</p>
-    <div class="contact-links">
-      <a href="mailto:shirashalom8@gmail.com" class="contact-link">&#x1F4E7; shirashalom8@gmail.com</a>
-      <a href="tel:+972526829999" class="contact-link">&#x1F4F1; +972-52-682-9999</a>
-    </div>
-    <div class="contact-socials">
-      <a href="mailto:shirashalom8@gmail.com" class="social-btn">&#x2709;&#xFE0F; Email</a>
-      <a href="https://www.linkedin.com/in/shirashalom" class="social-btn" target="_blank">LinkedIn</a>
-      <a href="tel:+972526829999" class="social-btn">&#x1F4DE; +972-52-682-9999</a>
-    </div>
-    <p class="contact-lang">Hebrew (native) &middot; English (native) &middot; Spanish (basic)</p>
-  </div>
-</section>
-
-<footer>
-  <div class="footer-logo">S<span>.</span>S</div>
-  <p class="footer-copy">&copy; 2026 Shira Shalom. Built with curiosity.</p>
-</footer>
-
-</body>
-</html>
+  <head>
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>Shira Shalom | Builder · Operator · Creator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+    <style>
+          *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+          :root {
+                  --bg: #0d0d0d; --bg-card: #141414; --text: #f5f5f5; --text-muted: #8c8c8c;
+                  --text-dim: #555; --primary: #ff1a8c; --primary-faint: rgba(255,26,140,0.08);
+                  --border: rgba(255,255,255,0.07); --tag-bg: rgba(255,255,255,0.06); --tag-text: #e6e6e6;
+          }
+          html { scroll-behavior: smooth; }
+          body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; font-size: 16px; line-height: 1.6; overflow-x: hidden; }
+          nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 20px 32px; background: rgba(13,13,13,0.85); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); }
+          .nav-logo { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; letter-spacing: 0.05em; color: var(--text); text-decoration: none; }
+          .nav-logo span { color: var(--primary); }
+          .nav-links { display: flex; gap: 32px; list-style: none; }
+          .nav-links a { color: var(--text-muted); text-decoration: none; font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; transition: color 0.2s; }
+          .nav-links a:hover { color: var(--text); }
+          .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 4px; }
+          .hamburger span { display: block; width: 22px; height: 2px; background: var(--text); border-radius: 2px; }
+          #hero { position: relative; min-height: 100vh; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+          .hero-glow-1 { position: absolute; top: 25%; left: -8rem; width: 24rem; height: 24rem; background: var(--primary-faint); border-radius: 50%; filter: blur(80px); pointer-events: none; }
+          .hero-glow-2 { position: absolute; bottom: 25%; right: -8rem; width: 20rem; height: 20rem; background: rgba(255,26,140,0.05); border-radius: 50%; filter: blur(80px); pointer-events: none; }
+          .hero-inner { position: relative; z-index: 10; max-width: 900px; margin: 0 auto; padding: 0 24px; text-align: center; }
+          .hero-photo { width: 110px; height: 110px; border-radius: 50%; object-fit: cover; object-position: top; border: 2px solid rgba(255,26,140,0.35); margin: 0 auto 28px; display: block; opacity: 0; animation: fadeUp 0.8s ease forwards 0.1s; }
+          .hero-eyebrow { font-size: 12px; font-weight: 500; letter-spacing: 0.25em; text-transform: uppercase; color: var(--primary); margin-bottom: 28px; opacity: 0; animation: fadeUp 0.8s ease forwards 0.2s; }
+          .hero-name { font-family: 'Playfair Display', serif; font-size: clamp(72px,12vw,120px); font-weight: 400; line-height: 1.0; margin-bottom: 32px; opacity: 0; animation: fadeUp 0.9s ease forwards 0.4s; }
+          .hero-name .line1 { display: block; color: #ffffff; }
+          .hero-name .line2 { display: block; color: #ffffff; }
+          .hero-desc { font-size: 17px; color: var(--text-muted); max-width: 540px; margin: 0 auto 40px; line-height: 1.7; opacity: 0; animation: fadeUp 0.9s ease forwards 0.6s; }
+          .hero-ctas { display: flex; gap: 16px; justify-content: center; opacity: 0; animation: fadeUp 0.9s ease forwards 0.8s; }
+          .btn-outline { display: inline-flex; align-items: center; gap: 8px; padding: 11px 24px; border: 1px solid var(--border); border-radius: 6px; color: var(--text); font-size: 14px; font-weight: 500; text-decoration: none; transition: border-color 0.2s, background 0.2s; }
+          .btn-outline:hover { border-color: rgba(255,255,255,0.2); background: rgba(255,255,255,0.04); }
+          .btn-primary { display: inline-flex; align-items: center; gap: 8px; padding: 11px 24px; background: var(--primary); border: 1px solid var(--primary); border-radius: 6px; color: #fff; font-size: 14px; font-weight: 500; text-decoration: none; transition: opacity 0.2s; }
+          .btn-primary:hover { opacity: 0.88; }
+          section { padding: 128px 24px; }
+          .section-card { background: var(--bg-card); }
+          .section-inner { max-width: 1000px; margin: 0 auto; }
+          .section-label { font-size: 11px; font-weight: 600; letter-spacing: 0.28em; text-transform: uppercase; color: var(--primary); margin-bottom: 16px; }
+          .section-title { font-family: 'Playfair Display', serif; font-size: clamp(32px,5vw,48px); font-weight: 400; color: var(--text); margin-bottom: 48px; line-height: 1.2; }
+          .about-lead { font-size: 18px; color: var(--text-muted); max-width: 660px; line-height: 1.75; margin-bottom: 64px; }
+          .about-cards { display: grid; grid-template-columns: repeat(auto-fit,minmax(260px,1fr)); gap: 20px; }
+          .about-card { background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 12px; padding: 28px; transition: border-color 0.2s; }
+          .about-card:hover { border-color: rgba(255,26,140,0.25); }
+          .about-card-icon { width: 36px; height: 36px; background: var(--primary-faint); border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-bottom: 16px; font-size: 18px; }
+          .about-card h3 { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 8px; }
+          .about-card p { font-size: 14px; color: var(--text-muted); line-height: 1.65; }
+          .exp-list { display: flex; flex-direction: column; }
+          .exp-item { display: grid; grid-template-columns: 1fr 2fr; gap: 40px; padding: 40px 0; border-bottom: 1px solid var(--border); }
+          .exp-item:last-child { border-bottom: none; }
+          .exp-company { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 500; color: var(--text); margin-bottom: 4px; }
+          .exp-role { font-size: 13px; color: var(--primary); font-weight: 500; margin-bottom: 8px; }
+          .exp-dates { font-size: 12px; color: var(--text-muted); margin-bottom: 4px; }
+          .exp-location { font-size: 12px; color: var(--text-dim); }
+          .exp-desc { font-size: 13px; color: var(--text-muted); line-height: 1.65; margin-bottom: 16px; font-style: italic; }
+          .exp-bullets { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+          .exp-bullets li { font-size: 14px; color: var(--text-muted); padding-left: 16px; position: relative; line-height: 1.55; }
+          .exp-bullets li::before { content: ''; position: absolute; left: 0; top: 9px; width: 5px; height: 5px; background: var(--primary); border-radius: 50%; }
+          .projects-intro { font-size: 16px; color: var(--text-muted); max-width: 560px; margin-bottom: 16px; line-height: 1.7; }
+          .projects-sub { font-size: 14px; color: var(--text-dim); margin-bottom: 56px; font-style: italic; }
+          .projects-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(290px,1fr)); gap: 20px; }
+          .project-card { background: rgba(255,255,255,0.025); border: 1px solid var(--border); border-radius: 14px; padding: 32px 28px; display: flex; flex-direction: column; gap: 12px; transition: border-color 0.2s, transform 0.2s; }
+          .project-card:hover { border-color: rgba(255,26,140,0.3); transform: translateY(-2px); }
+          .project-card-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+          .project-icon { width: 42px; height: 42px; background: var(--primary-faint); border: 1px solid rgba(255,26,140,0.15); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
+          .project-name { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 500; color: var(--text); margin-bottom: 2px; }
+          .project-type { font-size: 12px; color: var(--text-muted); }
+          .project-desc { font-size: 14px; color: var(--text-muted); line-height: 1.65; }
+          .project-tags { display: flex;
+    </style></title>
+  </head>
